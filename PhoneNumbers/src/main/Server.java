@@ -35,7 +35,6 @@ public class Server {
 	private static final String METHOD_GET = "GET";
 
 	public static void main(String[] args) throws Exception {
-		NumbersCsv ncsv = NumbersCsv.getInstance();
 		HttpServer server = HttpServer.create(new InetSocketAddress(PORT), 0);
 		server.createContext("/api/v1/phone-numbers/autocomplete", new PhoneHttpHandler());
 		// Thread control is given to executor service.
@@ -62,6 +61,7 @@ public class Server {
 					final List<String> queryList = requestParameters.get("query");
 					if (queryList != null) {
 						final byte[] rawResponseBody = Utility.getNumbers(queryList.get(0));
+						PhoneBook pb = PhoneBook.getInstance();
 						exchange.sendResponseHeaders(STATUS_OK, rawResponseBody.length);
 						OutputStream output = exchange.getResponseBody();
 						output.write(rawResponseBody);
