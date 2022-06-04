@@ -14,6 +14,7 @@ import com.sun.net.httpserver.Headers;
 
 import java.util.List;
 import java.util.Map;
+
 //Regular Expressions
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -34,6 +35,7 @@ public class Server {
 	private static final String METHOD_GET = "GET";
 
 	public static void main(String[] args) throws Exception {
+		NumbersCsv ncsv = NumbersCsv.getInstance();
 		HttpServer server = HttpServer.create(new InetSocketAddress(PORT), 0);
 		server.createContext("/api/v1/phone-numbers/autocomplete", new PhoneHttpHandler());
 		// Thread control is given to executor service.
