@@ -10,13 +10,14 @@ public class NumbersCsv {
 
 	private NumbersCsv() {
 		this.csvFile = new File(System.getProperty("user.dir") + FILE_NAME);
-		Thread downloadThread = new Thread(new Download(FILE_URL, csvFile));
-		downloadThread.start();
-		try {
-			downloadThread.join();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if (!csvFile.exists() || !csvFile.isFile()) {
+			Thread downloadThread = new Thread(new Download(FILE_URL, csvFile));
+			downloadThread.start();
+			try {
+				downloadThread.join();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
