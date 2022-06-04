@@ -7,6 +7,5 @@ public class PhoneNumber {
 	PhoneNumber(String name, String number) {
 		this.name = name;
 		this.number = number;
-
 	}
 }

@@ -1,31 +1,27 @@
 package main;
 
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
 import java.util.Scanner;
 
 public class PhoneBook {
 	private static PhoneBook single_instance = null;
-	Map<Integer, PhoneNumber> book;
+	ArrayList<PhoneNumber> book;
 
 	private PhoneBook() throws FileNotFoundException {
 		NumbersCsv ncsv = NumbersCsv.getInstance();
 		Scanner scanner = new Scanner(ncsv.csvFile);
+		this.book = new ArrayList<>();
 
-		int index = 0;
-		this.book = new HashMap<>();
 		while (scanner.hasNextLine()) {
 			String line = scanner.nextLine();
 			String[] row = line.split(",");
-			this.book.put(index++, new PhoneNumber(row[0], row[1]));
-		}
 
-		for (Map.Entry<Integer, PhoneNumber> entry : this.book.entrySet()) {
-			System.out.println("Name: " + entry.getValue().name + " | Phone number: " + entry.getValue().number);
+			this.book.add(new PhoneNumber(row[0], row[1]));
 		}
-		System.out.println("Scanner loop is finished");
 		scanner.close();
 	}
 
@@ -40,8 +36,41 @@ public class PhoneBook {
 		return single_instance;
 	}
 
-	/*
-	 * Bice ovdje metode za regexr za proanalzenje
-	 */
+	public ArrayList<PhoneNumber> autocomplete(String searchedNumber) {
+		searchedNumber = searchedNumber.replaceAll("[^0-9]", "");
+		ArrayList<PhoneNumber> list = new ArrayList<>();
+		Iterator<PhoneNumber> it = this.book.iterator();
+
+		while (it.hasNext()) {
+			PhoneNumber pn = it.next();
+			String digits = pn.number.replaceAll("[^0-9]", "");
+			if (digits.startsWith(searchedNumber))
+				list.add(pn);
+		}
+
+		Collections.sort(list, new Comparator<PhoneNumber>() {
+			@Override
+			public int compare(PhoneNumber pn1, PhoneNumber pn2) {
+				int len1 = pn1.number.length();
+				int len2 = pn2.number.length();
+
+				if (len1 == len2)
+					return 0;
+				else if (len1 > len2)
+					return 1;
+				else
+					return -1;
+			}
+		});
+		
+		//Ovdje treba odamh u json pretoviri da se ne muci covjek
+
+		for (int i = 0; i < list.size(); i++) {
+			System.out.println(list.get(i).number);
+		}
+
+		return null;
+
+	}
 
 }

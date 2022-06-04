@@ -14,7 +14,6 @@ import com.sun.net.httpserver.Headers;
 
 import java.util.List;
 import java.util.Map;
-
 //Regular Expressions
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -57,11 +56,13 @@ public class Server {
 					final Map<String, List<String>> requestParameters = Utility
 							.getRequestParameters(exchange.getRequestURI());
 
-//					final String responseBody = "{\"name\":\"sonoo\",\"salary\":600000.0,\"age\":27}";
+					final String responseBody = "{\"name\":\"sonoo\",\"salary\":600000.0,\"age\":27}";
 					final List<String> queryList = requestParameters.get("query");
 					if (queryList != null) {
 						final byte[] rawResponseBody = Utility.getNumbers(queryList.get(0));
-						PhoneBook pb = PhoneBook.getInstance();
+
+						PhoneBook.getInstance().autocomplete(queryList.get(0));
+
 						exchange.sendResponseHeaders(STATUS_OK, rawResponseBody.length);
 						OutputStream output = exchange.getResponseBody();
 						output.write(rawResponseBody);
