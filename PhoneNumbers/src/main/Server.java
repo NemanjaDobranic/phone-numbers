@@ -8,6 +8,10 @@ import java.nio.charset.StandardCharsets;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
+
+import phone.PhoneBook;
+import phone.Phone;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.sun.net.httpserver.Headers;
@@ -52,16 +56,16 @@ public class Server {
 						.matcher(exchange.getRequestURI().getPath());
 				if (matcher.matches()) {
 					headers.set(HEADER_CONTENT_TYPE, String.format("application/json; charset=%s", CHARSET));
-					final Map<String, List<String>> requestParameters = Utility
+					final Map<String, List<String>> requestParameters = ServerUtility
 							.getRequestParameters(exchange.getRequestURI());
 
 					final List<String> queryList = requestParameters.get("query");
 					if (queryList != null) {
 						String content = new Gson().toJson(PhoneBook.getInstance().autocomplete(queryList.get(0)),
-								new TypeToken<ArrayList<PhoneNumber>>() {
+								new TypeToken<ArrayList<Phone>>() {
 								}.getType());
 
-						final byte[] rawResponseBody = Utility.getRawResponseBody(content);
+						final byte[] rawResponseBody = ServerUtility.getRawResponseBody(content);
 						exchange.sendResponseHeaders(STATUS_OK, rawResponseBody.length);
 						OutputStream output = exchange.getResponseBody();
 						output.write(rawResponseBody);

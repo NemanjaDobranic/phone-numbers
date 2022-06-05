@@ -1,4 +1,4 @@
-package main;
+package phone;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -9,10 +9,10 @@ import java.util.Scanner;
 
 public class PhoneBook {
 	private static PhoneBook single_instance = null;
-	ArrayList<PhoneNumber> book;
+	ArrayList<Phone> book;
 
 	private PhoneBook() throws FileNotFoundException {
-		NumbersCsv ncsv = NumbersCsv.getInstance();
+		PhoneCsv ncsv = PhoneCsv.getInstance();
 		Scanner scanner = new Scanner(ncsv.csvFile);
 		this.book = new ArrayList<>();
 
@@ -20,7 +20,7 @@ public class PhoneBook {
 			String line = scanner.nextLine();
 			String[] row = line.split(",");
 
-			this.book.add(new PhoneNumber(row[0], row[1]));
+			this.book.add(new Phone(row[0], row[1]));
 		}
 		scanner.close();
 	}
@@ -36,21 +36,21 @@ public class PhoneBook {
 		return single_instance;
 	}
 
-	public ArrayList<PhoneNumber> autocomplete(String searchedNumber) {
+	public ArrayList<Phone> autocomplete(String searchedNumber) {
 		String plainNumber = searchedNumber.replaceAll("[^0-9]", "");
-		ArrayList<PhoneNumber> list = new ArrayList<>();
-		Iterator<PhoneNumber> it = this.book.iterator();
+		ArrayList<Phone> list = new ArrayList<>();
+		Iterator<Phone> it = this.book.iterator();
 
 		while (it.hasNext()) {
-			PhoneNumber pn = it.next();
+			Phone pn = it.next();
 			String digits = pn.phoneNumber.replaceAll("[^0-9]", "");
 			if (digits.startsWith(plainNumber))
 				list.add(pn);
 		}
 
-		Comparator<PhoneNumber> cmpLength = new Comparator<PhoneNumber>() {
+		Comparator<Phone> cmpLength = new Comparator<Phone>() {
 			@Override
-			public int compare(PhoneNumber pn1, PhoneNumber pn2) {
+			public int compare(Phone pn1, Phone pn2) {
 				Integer len1 = pn1.phoneNumber.length();
 				Integer len2 = pn2.phoneNumber.length();
 
@@ -58,9 +58,9 @@ public class PhoneBook {
 			}
 		};
 
-		Comparator<PhoneNumber> cmpFormat = new Comparator<PhoneNumber>() {
+		Comparator<Phone> cmpFormat = new Comparator<Phone>() {
 			@Override
-			public int compare(PhoneNumber pn1, PhoneNumber pn2) {
+			public int compare(Phone pn1, Phone pn2) {
 				if (pn2.phoneNumber.startsWith(searchedNumber))
 					return 1;
 
@@ -75,7 +75,7 @@ public class PhoneBook {
 		Collections.sort(list, cmpFormat);
 		
 		if (list.size() > 10)
-			return new ArrayList<PhoneNumber>(list.subList(0, 10));
+			return new ArrayList<Phone>(list.subList(0, 10));
 
 		return list;
 

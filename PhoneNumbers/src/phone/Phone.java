@@ -1,10 +1,10 @@
-package main;
+package phone;
 
-public class PhoneNumber {
+public class Phone {
 	String name;
 	String phoneNumber;
 
-	PhoneNumber(String name, String number) {
+	Phone(String name, String number) {
 		this.name = name;
 		this.phoneNumber = number;
 	}

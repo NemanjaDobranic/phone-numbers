@@ -10,7 +10,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Utility {
+public class ServerUtility {
 	private static final Charset CHARSET = StandardCharsets.UTF_8;
 
 	public static Map<String, List<String>> getRequestParameters(final URI requestUri) {
