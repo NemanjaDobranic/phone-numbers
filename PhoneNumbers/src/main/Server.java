@@ -5,16 +5,15 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-
-//Server imports
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.sun.net.httpserver.Headers;
-
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-//Regular Expressions
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -56,13 +55,13 @@ public class Server {
 					final Map<String, List<String>> requestParameters = Utility
 							.getRequestParameters(exchange.getRequestURI());
 
-					final String responseBody = "{\"name\":\"sonoo\",\"salary\":600000.0,\"age\":27}";
 					final List<String> queryList = requestParameters.get("query");
 					if (queryList != null) {
-						final byte[] rawResponseBody = Utility.getNumbers(queryList.get(0));
+						String content = new Gson().toJson(PhoneBook.getInstance().autocomplete(queryList.get(0)),
+								new TypeToken<ArrayList<PhoneNumber>>() {
+								}.getType());
 
-						PhoneBook.getInstance().autocomplete(queryList.get(0));
-
+						final byte[] rawResponseBody = Utility.getRawResponseBody(content);
 						exchange.sendResponseHeaders(STATUS_OK, rawResponseBody.length);
 						OutputStream output = exchange.getResponseBody();
 						output.write(rawResponseBody);

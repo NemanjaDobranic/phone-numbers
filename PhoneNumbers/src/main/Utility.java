@@ -38,10 +38,10 @@ public class Utility {
 			throw new InternalError(ex);
 		}
 	}
-	
-	public static byte[] getNumbers(String number) {
-		final String responseBody = number;
-		final byte[] rawResponseBody = responseBody.getBytes(CHARSET);
+
+	public static byte[] getRawResponseBody(String content) {
+		final String response = "{\"content\":" + content + "}";
+		final byte[] rawResponseBody = response.getBytes(CHARSET);
 		return rawResponseBody;
 	}
 }

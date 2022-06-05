@@ -43,7 +43,7 @@ public class PhoneBook {
 
 		while (it.hasNext()) {
 			PhoneNumber pn = it.next();
-			String digits = pn.number.replaceAll("[^0-9]", "");
+			String digits = pn.phoneNumber.replaceAll("[^0-9]", "");
 			if (digits.startsWith(searchedNumber))
 				list.add(pn);
 		}
@@ -51,8 +51,8 @@ public class PhoneBook {
 		Collections.sort(list, new Comparator<PhoneNumber>() {
 			@Override
 			public int compare(PhoneNumber pn1, PhoneNumber pn2) {
-				int len1 = pn1.number.length();
-				int len2 = pn2.number.length();
+				int len1 = pn1.phoneNumber.length();
+				int len2 = pn2.phoneNumber.length();
 
 				if (len1 == len2)
 					return 0;
@@ -62,14 +62,11 @@ public class PhoneBook {
 					return -1;
 			}
 		});
-		
-		//Ovdje treba odamh u json pretoviri da se ne muci covjek
 
-		for (int i = 0; i < list.size(); i++) {
-			System.out.println(list.get(i).number);
-		}
+		if (list.size() > 10)
+			return new ArrayList<PhoneNumber>(list.subList(0, 10));
 
-		return null;
+		return list;
 
 	}
 

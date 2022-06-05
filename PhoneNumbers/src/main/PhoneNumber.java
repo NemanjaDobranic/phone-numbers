@@ -2,10 +2,10 @@ package main;
 
 public class PhoneNumber {
 	String name;
-	String number;
+	String phoneNumber;
 
 	PhoneNumber(String name, String number) {
 		this.name = name;
-		this.number = number;
+		this.phoneNumber = number;
 	}
 }
