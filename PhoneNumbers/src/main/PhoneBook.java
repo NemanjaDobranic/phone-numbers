@@ -37,32 +37,43 @@ public class PhoneBook {
 	}
 
 	public ArrayList<PhoneNumber> autocomplete(String searchedNumber) {
-		searchedNumber = searchedNumber.replaceAll("[^0-9]", "");
+		String plainNumber = searchedNumber.replaceAll("[^0-9]", "");
 		ArrayList<PhoneNumber> list = new ArrayList<>();
 		Iterator<PhoneNumber> it = this.book.iterator();
 
 		while (it.hasNext()) {
 			PhoneNumber pn = it.next();
 			String digits = pn.phoneNumber.replaceAll("[^0-9]", "");
-			if (digits.startsWith(searchedNumber))
+			if (digits.startsWith(plainNumber))
 				list.add(pn);
 		}
 
-		Collections.sort(list, new Comparator<PhoneNumber>() {
+		Comparator<PhoneNumber> cmpLength = new Comparator<PhoneNumber>() {
 			@Override
 			public int compare(PhoneNumber pn1, PhoneNumber pn2) {
-				int len1 = pn1.phoneNumber.length();
-				int len2 = pn2.phoneNumber.length();
+				Integer len1 = pn1.phoneNumber.length();
+				Integer len2 = pn2.phoneNumber.length();
 
-				if (len1 == len2)
-					return 0;
-				else if (len1 > len2)
-					return 1;
-				else
-					return -1;
+				return len1.compareTo(len2);
 			}
-		});
+		};
 
+		Comparator<PhoneNumber> cmpFormat = new Comparator<PhoneNumber>() {
+			@Override
+			public int compare(PhoneNumber pn1, PhoneNumber pn2) {
+				if (pn2.phoneNumber.startsWith(searchedNumber))
+					return 1;
+
+				if (pn1.phoneNumber.startsWith(searchedNumber))
+					return -1;
+
+				return 0;
+			}
+		};
+
+		Collections.sort(list, cmpLength);
+		Collections.sort(list, cmpFormat);
+		
 		if (list.size() > 10)
 			return new ArrayList<PhoneNumber>(list.subList(0, 10));
 
